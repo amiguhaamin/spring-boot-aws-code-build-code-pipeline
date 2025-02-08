@@ -6,16 +6,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/courses")
+@RequestMapping("/greet")
 public class MessageController {
 
     @PostMapping(produces = "application/json", consumes = "application/json")
-    public ResponseEntity<Message> addCourse(@RequestBody String name) {
+    public ResponseEntity<Message> greetFromPost(@RequestBody String name) {
         return new ResponseEntity<>(new Message("Hello from post, " + name + "!"), HttpStatus.OK);
     }
 
     @GetMapping(value = "/{name}", produces = "application/json")
-    public ResponseEntity<Message> printParam(@PathVariable String name) {
+    public ResponseEntity<Message> greetFromGet(@PathVariable String name) {
         return new ResponseEntity<>(new Message("Hello " + name + "!"), HttpStatus.OK);
     }
 
