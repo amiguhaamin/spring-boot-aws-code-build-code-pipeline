@@ -1,10 +1,14 @@
-# Use the official OpenJDK 17 image from Docker Hub
-FROM openjdk:17
-# Set working directory inside the container
+FROM maven:3.8.5-openjdk-17 as builder
 WORKDIR /app
-# Copy the compiled Java application JAR file into the container
-COPY ./target/app.jar /app
-# Expose the port the Spring Boot application will run on
+COPY pom.xml .
+RUN mvn dependency:go-offline
+COPY src/ ./src/
+RUN mvn clean package -DskipTests=true
+
+# Build stage
+FROM openjdk:17-jdk-slim AS prod
+RUN mkdir /app
+COPY --from=builder /app/target/*.jar /app/app.jar
+WORKDIR app
 EXPOSE 8080
-# Command to run the application
-CMD ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
